@@ -1,0 +1,35 @@
+-> todas os artigos de determinado reporter
+ Article.objects.filter(reporter__full_name__startswith='John')
+ <QuerySet [<Article: this is a test>]>
+
+ 
+
+-> todos os artigos de entre 2019-2020
+ z = Article.objects.filter(pub_date__gte='2019-01-01')
+ z2 = z.exclude(pub_date__gte='2020-12-31')
+ <QuerySet [<Article: As vezes isso não faz sentido>, <Article: Isso era p ser um cabeçalho?>, <Article: Qual é a forma de medida do ar/>]>
+
+ 
+
+-> o reporter com mais artigos em 2020
+ from django.db.models import Count
+ Reporter.objects.filter(article__pub_date__year=2020).annotate(num_articles=Count('article')).order_by('-num_articles')[0]
+ <Reporter: Maria Vitoria>
+
+ 
+
+-> artigos que contenham a palvra "python" e tenham sido publicados por determinado reporter em janeiro de 2021
+ Article.objects.filter(headline__contains='python').filter(pub_date__month = "01").filter(pub_date__year = "2021")
+ <QuerySet []>
+
+ 
+
+-> A quantidade de publicacoes que tenham a letra "i"
+ Publication.objects.filter(title__contains='i').count()
+ 8
+
+ 
+
+-> A media de publicacoes por artigos
+ Publication.objects.count() / Article.objects.count()
+ 2.0
